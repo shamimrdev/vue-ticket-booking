@@ -8,7 +8,6 @@ To add a screenshot:
 1. Open `index.html` in your web browser.
 2. Take a screenshot of the application.
 3. Save the image (e.g., `screenshot.png`) in the project's root directory.
-4. Update the `README.md` file to link to your screenshot, replacing this placeholder text.
 
 ![Screenshot of the Ticket Booking App](ticketkbooing.png)
 
