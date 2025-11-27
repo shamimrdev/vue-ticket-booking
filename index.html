@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ticket Booking App</title>
+  <script src="style/tailwindcss@4.js"></script>
+  <script src="style/vue.global.js"></script>
+</head>
+
+<body>
+  <header class="bg-gray-200 p-2 text-center">
+    <div class="container mx-auto ">
+      <h2 class="text-2xl font-bold">Ticket Booking App</h2>
+    </div>
+  </header>
+
+  <div id="app" class="min-h-screen bg-gray-50 flex items-center justify-center py-6">
+    <div class="w-3/6 bg-white rounded-xl shadow-md border border-gray-200 p-4">
+      <div class="heading text-center mb-6">
+        <h1 class="font-bold text-lg text-green-700">Ticket Booking App</h1>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <div class="border border-gray-200 rounded-lg p-4 ">
+          <!-- Header -->
+          <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+            <h2 class="text-2xl underline font-semibold text-gray-800">Gate</h2>
+            <h2 class="text-2xl underline font-semibold text-gray-800">Driver</h2>
+          </div>
+
+          <div class="flex flex-col gap-6">
+
+            <!-- Loop through rows A-F -->
+            <div v-for="letter in ['A','B','C','D','E','F']" class="flex items-center justify-center gap-8">
+
+              <!-- LEFT BLOCK: seats ending in 1 and 2 -->
+              <div class="flex gap-2">
+                <p v-for="(seat, i) in seats.filter(s => s.name.startsWith(letter) && ['1','2'].includes(s.name.slice(1)))"
+                  @click="selectedSeats(seat)" :class="[
+        seat.type === 'available' ? 'bg-white' : '',
+        seat.type === 'booked' ? 'bg-gray-400 text-white' : '',
+        seat.type === 'selected' ? 'bg-green-600 text-white' : '',
+        seat.type === 'sold' ? 'bg-red-500 text-white' : ''
+    ]" class="border cursor-pointer border-gray-300 rounded-lg text-center py-2 px-4 text-sm font-medium bg-gray-50">
+                  {{ seat.name }}
+                </p>
+              </div>
+
+              <!-- RIGHT BLOCK: seats ending in 3 and 4 -->
+              <div class="flex gap-2">
+                <p v-for="seat in seats.filter(s => s.name.startsWith(letter) && ['3','4'].includes(s.name.slice(1)))"
+                  @click="selectedSeats(seat)" :class="[
+        seat.type === 'available' ? 'bg-white' : '',
+        seat.type === 'booked' ? 'bg-gray-400 text-white' : '',
+        seat.type === 'selected' ? 'bg-green-600 text-white' : '',
+        seat.type === 'sold' ? 'bg-red-500 text-white' : ''
+    ]" class="border cursor-pointer border-gray-300 rounded-lg text-center py-2 px-4 text-sm font-medium bg-gray-50">
+                  {{ seat.name }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="selectedSeat.length > 0" class="select-seat text-center w-full rounded-lg p-4">
+          <table class="selected-seats w-full text-left border border-gray-200">
+            <thead class="bg-gray-100">
+              <tr class="border-b border-gray-400">
+                <th class="py-2 px-4">Seat Number</th>
+                <th class="py-2 px-4">Amount</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-for="seat in selectedSeat" class="border-b border-gray-400">
+                <td class="py-2 px-4"> {{ seat.name }}</td>
+                <td class="py-2 px-4"> {{ seat.price }} </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="bg-gray-50" v-if="appliedCoupon">
+                <td class="font-semibold py-2 px-4">Discount</td>
+                <td class="py-2 px-4">{{ appliedCoupon }}</td>
+              </tr>
+              <tr class="font-semibold bg-gray-50">
+                <td class="py-2 px-4">Total</td>
+                <td class="py-2 px-4">{{ totalPrice }}</td>
+              </tr>
+            </tfoot>
+          </table>
+
+
+          <div class="coupon flex justify-between mt-4 items-center">
+            <p><small>Have a coupon?</small></p>
+            <input type="text" v-model="couponCode"
+              class="border border-gray-300 outline-none rounded-lg px-4 py-2 w-3/4" placeholder="Enter coupon code" />
+          </div>
+          <div class="info flex justify-between items-center mt-4 gap-4">
+            <input v-model="name" type="text" class="border border-gray-300 outline-none rounded-lg px-4 py-2 w-3/4"
+              placeholder="name" />
+            <input v-model="mobile" type="text" class="border border-gray-300 outline-none rounded-lg px-4 py-2 w-3/4"
+              placeholder="phone" />
+          </div>
+          <button @click="confirmBooking" class="confirm mt-4 bg-green-600 text-white py-2 px-4 rounded-lg w-full">
+            Confirm
+          </button>
+        </div>
+
+        <div v-else class="noseatSelected">
+
+          <p class="text-red-500">You don't have No seat selected</p>
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <div class="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-50"
+      v-if="confirmed === true">
+      <div class="confirm-box bg-white rounded-lg shadow-lg p-6 w-96 max-w-full">
+        <h3 class="text-center mb-4 font-bold text-green-500">Ticket confirmed!</h3>
+        <table class="selected-seats w-full text-left border border-gray-200">
+          <thead class="bg-gray-100">
+            <tr class="border-b border-gray-400">
+              <th class="py-2 px-4">Seat Number</th>
+              <th class="py-2 px-4">Amount</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="seat in selectedSeat" class="border-b border-gray-400">
+              <td class="py-2 px-4"> {{ seat.name }}</td>
+              <td class="py-2 px-4"> {{ seat.price }} </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="bg-gray-50" v-if="appliedCoupon">
+              <td class="font-semibold py-2 px-4">Discount</td>
+              <td class="py-2 px-4">{{ appliedCoupon }}</td>
+            </tr>
+            <tr class="font-semibold bg-gray-50">
+              <td class="py-2 px-4">Total</td>
+              <td class="py-2 px-4">{{ totalPrice }}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div class="flex justify-end gap-3">
+          <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">Cancel</button>
+          <button @click="resetData" class=" px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700
+            transition">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="style/app.js"></script>
+</body>
+
+</html>
