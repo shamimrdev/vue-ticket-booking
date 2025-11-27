@@ -20,11 +20,11 @@ var app = Vue.createApp({
       seatStates: {
         sold: {
           text: "Sold",
-          color: "#ff0000",
+          color: "red",
         },
         available: {
           text: "Available",
-          color: "#fff",
+          color: "white",
         },
         booked: {
           text: "Booked",
@@ -32,7 +32,7 @@ var app = Vue.createApp({
         },
         selected: {
           text: "Selected",
-          color: "#00ff00",
+          color: "green",
         },
       },
       seats: [
@@ -221,7 +221,8 @@ var app = Vue.createApp({
       this.confirmed = false;
       this.name = "";
       this.mobile = "";
-      this.appliedCoupon = null;
+      this.couponCode = "";
+      this.selectedSeat = [];
 
       this.seats.forEach((seat) => {
         if (seat.type === "selected") {
@@ -241,7 +242,6 @@ var app = Vue.createApp({
         }
       }
     },
-    
   },
 });
 

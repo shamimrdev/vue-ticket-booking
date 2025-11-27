@@ -21,6 +21,13 @@
       <div class="heading text-center mb-6">
         <h1 class="font-bold text-lg text-green-700">Ticket Booking App</h1>
       </div>
+      <div class="seat_details flex justify-around mb-4">
+        <p v-for="seat in seatStates">
+          <span class="inline-block w-4 h-4 border border-gray-300 mr-2" :class="`bg-[${seat.color}]`"></span>
+          {{seat.text}}
+        </p>
+
+      </div>
 
       <div class="flex items-center gap-6">
         <div class="border border-gray-200 rounded-lg p-4 ">
@@ -130,16 +137,22 @@
           </thead>
 
           <tbody>
-            <tr v-for="seat in selectedSeat" class="border-b border-gray-400">
-              <td class="py-2 px-4"> {{ seat.name }}</td>
-              <td class="py-2 px-4"> {{ seat.price }} </td>
+            <tr class="border-b border-gray-400">
+              <td class="py-2 px-4"> Name</td>
+              <td class="py-2 px-4">{{ name }}</td>
+            </tr>
+            <tr class="border-b border-gray-400">
+              <td class="py-2 px-4"> Mobile</td>
+              <td class="py-2 px-4">{{ mobile }}</td>
+            </tr>
+            <tr class="border-b border-gray-400">
+              <td class="py-2 px-4"> Seats</td>
+              <td class="py-2 px-4">
+                <p v-for="seat in selectedSeat">{{ seat.name }}</p>
+              </td>
             </tr>
           </tbody>
           <tfoot>
-            <tr class="bg-gray-50" v-if="appliedCoupon">
-              <td class="font-semibold py-2 px-4">Discount</td>
-              <td class="py-2 px-4">{{ appliedCoupon }}</td>
-            </tr>
             <tr class="font-semibold bg-gray-50">
               <td class="py-2 px-4">Total</td>
               <td class="py-2 px-4">{{ totalPrice }}</td>
@@ -148,9 +161,8 @@
         </table>
 
         <div class="flex justify-end gap-3">
-          <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">Cancel</button>
           <button @click="resetData" class=" px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700
-            transition">Ok</button>
+            transition">Book Again</button>
         </div>
       </div>
     </div>

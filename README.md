@@ -9,7 +9,11 @@ To add a screenshot:
 2. Take a screenshot of the application.
 3. Save the image (e.g., `screenshot.png`) in the project's root directory.
 
-![Screenshot of the Ticket Booking App](ticketkbooing.png)
+![Screenshot of the Ticket Booking App](1.png)
+![Screenshot of the Ticket Booking App](2.png)
+![Screenshot of the Ticket Booking App](3.png)
+![Screenshot of the Ticket Booking App](5.png)
+![Screenshot of the Ticket Booking App](6.png)
 
 ## Features
 
